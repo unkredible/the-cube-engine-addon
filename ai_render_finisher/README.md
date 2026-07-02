@@ -1,6 +1,6 @@
 # The Cube Engine
 
-Version: 0.1.33
+Version: 0.1.34
 
 Blender addon for AI-guided render post-production.
 
@@ -11,6 +11,7 @@ Blender addon for AI-guided render post-production.
 - Local job folder creation under `ai_render_finisher/jobs/<timestamp>/`.
 - `beauty.png` export through Blender OpenGL render.
 - `manifest.json` generation.
+- Dashboard-issued addon key required for protected backend calls.
 - `LocalMockProvider` output copied as `mock_output_01.png` and additional variants when requested.
 - Provider API keys and proprietary prompt logic are intentionally backend-only.
 

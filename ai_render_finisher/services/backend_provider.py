@@ -5,6 +5,7 @@ import urllib.error
 import urllib.request
 from urllib.parse import urlencode
 
+from ..constants import ADDON_VERSION_STRING
 from .provider_base import AIProviderBase
 
 
@@ -13,8 +14,21 @@ class BackendProvider(AIProviderBase):
         self.backend_url = backend_url.rstrip("/")
         self.device_token = device_token
         self.response = None
+        self.entitlement = None
+
+    def validate_entitlement(self) -> dict:
+        if self.entitlement:
+            return self.entitlement
+        if not self.device_token:
+            raise RuntimeError("Missing addon key. Generate it from the dashboard and paste it in Preferences.")
+        payload = self._get_json("/api/addon/entitlement")
+        if not payload.get("ok"):
+            raise RuntimeError(payload.get("error", "Addon entitlement rejected"))
+        self.entitlement = payload.get("entitlement", {})
+        return self.entitlement
 
     def submit_job(self, manifest: dict, files: dict) -> dict:
+        self.validate_entitlement()
         encoded_files = {}
         for name, path in files.items():
             encoded_files[name] = {
@@ -63,9 +77,8 @@ class BackendProvider(AIProviderBase):
 
     def _post_json(self, path: str, payload: dict) -> dict:
         body = json.dumps(payload).encode("utf-8")
-        headers = {"Content-Type": "application/json"}
-        if self.device_token:
-            headers["Authorization"] = f"Bearer {self.device_token}"
+        headers = self._headers()
+        headers["Content-Type"] = "application/json"
 
         request = urllib.request.Request(
             f"{self.backend_url}{path}",
@@ -84,9 +97,7 @@ class BackendProvider(AIProviderBase):
             raise RuntimeError(f"Backend unreachable: {exc.reason}") from exc
 
     def _get_json(self, path: str) -> dict:
-        headers = {}
-        if self.device_token:
-            headers["Authorization"] = f"Bearer {self.device_token}"
+        headers = self._headers()
 
         request = urllib.request.Request(f"{self.backend_url}{path}", headers=headers, method="GET")
 
@@ -98,6 +109,14 @@ class BackendProvider(AIProviderBase):
             raise RuntimeError(f"Backend HTTP {exc.code}: {error_body}") from exc
         except urllib.error.URLError as exc:
             raise RuntimeError(f"Backend unreachable: {exc.reason}") from exc
+
+    def _headers(self) -> dict:
+        headers = {
+            "X-TheCube-Addon-Version": ADDON_VERSION_STRING,
+        }
+        if self.device_token:
+            headers["Authorization"] = f"Bearer {self.device_token}"
+        return headers
 
 
 def _read_b64(path: str) -> str:

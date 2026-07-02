@@ -30,6 +30,13 @@ class JobManager:
         set_job_state(self.props, "STARTING", "Starting", "Creating job folder", 0.08)
         yield
         job_dir = create_job_dir(self.scene)
+        provider = self._provider()
+        if hasattr(provider, "validate_entitlement"):
+            set_job_state(self.props, "SUBMITTING", "Authorizing", "Checking addon key and subscription", 0.12)
+            yield
+            entitlement = provider.validate_entitlement()
+            subscription_status = entitlement.get("subscription_status", "active")
+            append_debug(self.props, f"Entitlement ok: {subscription_status}")
         set_job_state(self.props, "EXPORTING", "Exporting", "Saving beauty.png", 0.20)
         yield
         beauty_path = export_beauty(self.context, job_dir, self.props)
@@ -48,7 +55,6 @@ class JobManager:
         yield
         manifest_path = write_manifest(manifest, job_dir)
 
-        provider = self._provider()
         set_job_state(self.props, "SUBMITTING", "Submitting", f"Using {provider.__class__.__name__}", 0.65)
         yield
         files = {"beauty": beauty_path}

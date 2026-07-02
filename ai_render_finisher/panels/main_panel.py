@@ -20,8 +20,15 @@ class AIRENDERFINISHER_PT_MainPanel(bpy.types.Panel):
     def draw(self, context):
         layout = self.layout
         props = context.scene.ai_render_finisher
+        addon = context.preferences.addons.get("ai_render_finisher")
+        prefs = addon.preferences if addon else None
 
         layout.label(text=f"Build {ADDON_VERSION_STRING}", icon="PLUGIN")
+        if prefs and prefs.provider == "THECUBE_BACKEND" and not prefs.device_token:
+            warning = layout.box()
+            warning.alert = True
+            warning.label(text="Addon key missing", icon="ERROR")
+            warning.label(text="Generate it from your dashboard and paste it in Preferences.")
 
         controls = layout.column()
         controls.enabled = not props.is_running

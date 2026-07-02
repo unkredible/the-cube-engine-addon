@@ -19,7 +19,8 @@ class AIRENDERFINISHER_AddonPreferences(bpy.types.AddonPreferences):
     )
 
     device_token: bpy.props.StringProperty(
-        name="Device Token",
+        name="Addon Key",
+        description="Unique key generated from your TheCube ENGINE dashboard",
         default="",
         subtype="PASSWORD",
     )
@@ -29,6 +30,7 @@ class AIRENDERFINISHER_AddonPreferences(bpy.types.AddonPreferences):
         layout.prop(self, "provider")
         layout.prop(self, "backend_url")
         layout.prop(self, "device_token")
+        layout.label(text="Generate this key from the dashboard before using the backend.")
 
 
 classes = (AIRENDERFINISHER_AddonPreferences,)
