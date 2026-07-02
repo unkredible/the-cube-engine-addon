@@ -18,7 +18,7 @@ class AIRENDERFINISHER_OT_Generate(bpy.types.Operator):
         if props.source == "IMAGE" and not props.source_image:
             self.report({"ERROR"}, "Image source requires an input image")
             return {"CANCELLED"}
-        if props.mode != "IMPROVE" and props.style_preset == "CUSTOM_IMAGE" and not props.style_reference_image:
+        if props.mode != "RENDER_FINISH" and props.style_preset == "CUSTOM_IMAGE" and not props.style_reference_image:
             self.report({"ERROR"}, "Custom Image style requires a style image")
             return {"CANCELLED"}
 

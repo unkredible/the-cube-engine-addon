@@ -2,9 +2,10 @@ import bpy
 
 
 MODE_AI_STRENGTH = {
-    "IMPROVE": 0.25,
-    "RESTYLE": 0.55,
-    "INVENT": 0.95,
+    "SHAPE_TO_RENDER": 0.85,
+    "GEOMETRY_LOCK": 0.45,
+    "RENDER_FINISH": 0.20,
+    "FREE": 1.0,
 }
 
 

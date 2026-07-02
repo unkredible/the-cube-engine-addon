@@ -4,9 +4,10 @@ from ..constants import ADDON_AUTHOR, ADDON_NAME, ADDON_VERSION_STRING, ADDON_WE
 
 
 MODE_CARDS = (
-    ("IMPROVE", "Improve", "SHADING_SOLID"),
-    ("RESTYLE", "Restyle", "COLOR"),
-    ("INVENT", "Invent", "LIGHT"),
+    ("SHAPE_TO_RENDER", "Shape", "MESH_CUBE"),
+    ("GEOMETRY_LOCK", "Faithful", "MOD_WIREFRAME"),
+    ("RENDER_FINISH", "Polish", "SHADING_RENDERED"),
+    ("FREE", "Free", "LIGHT"),
 )
 
 
@@ -36,7 +37,7 @@ class AIRENDERFINISHER_PT_MainPanel(bpy.types.Panel):
         if props.source == "IMAGE":
             controls.template_ID_preview(props, "source_image", open="image.open", rows=3, cols=3)
         self._draw_mode_cards(controls, props)
-        if props.mode != "IMPROVE":
+        if props.mode != "RENDER_FINISH":
             controls.prop(props, "style_preset")
             if props.style_preset == "CUSTOM_IMAGE":
                 controls.template_ID_preview(props, "style_reference_image", open="image.open", rows=3, cols=3)

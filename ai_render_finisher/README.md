@@ -1,13 +1,13 @@
 # The Cube Engine
 
-Version: 0.1.34
+Version: 0.1.35
 
 Blender addon for AI-guided render post-production.
 
 ## MVP 0.1
 
 - View3D N-Panel UI.
-- Viewport, Render or Image source, mode cards, style preset, prompt, style reference, billing and variants controls.
+- Viewport, Render or Image source, four mode cards, style preset, prompt, style reference, billing and variants controls.
 - Local job folder creation under `ai_render_finisher/jobs/<timestamp>/`.
 - `beauty.png` export through Blender OpenGL render.
 - `manifest.json` generation.

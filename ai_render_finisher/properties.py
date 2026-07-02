@@ -21,11 +21,12 @@ class AIRENDERFINISHER_Properties(bpy.types.PropertyGroup):
     mode: bpy.props.EnumProperty(
         name="Mode",
         items=(
-            ("IMPROVE", "Improve", "Polish the render without redesigning"),
-            ("RESTYLE", "Restyle", "Change art direction while preserving structure"),
-            ("INVENT", "Invent", "Use the scene as a loose concept guide"),
+            ("SHAPE_TO_RENDER", "Shape to Render", "Use primitive shapes as positional guide; prompt and style drive the final image"),
+            ("GEOMETRY_LOCK", "Geometry Lock", "Preserve geometry over 90% while improving lighting and materials"),
+            ("RENDER_FINISH", "Render Finish", "Polish an already good render without inventing new content"),
+            ("FREE", "Free", "Let prompt and reference image drive the result"),
         ),
-        default="RESTYLE",
+        default="GEOMETRY_LOCK",
     )
 
     style_preset: bpy.props.EnumProperty(
@@ -47,7 +48,7 @@ class AIRENDERFINISHER_Properties(bpy.types.PropertyGroup):
 
     style_reference_image: bpy.props.PointerProperty(
         name="Style Image",
-        description="Image used only as visual style reference for Restyle and Invent",
+        description="Image used only as visual style reference",
         type=bpy.types.Image,
     )
 

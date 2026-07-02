@@ -97,7 +97,7 @@ def bpy_path(path: str) -> str:
 
 
 def resolve_style_reference_path(props, job_dir: str) -> str:
-    if props.mode == "IMPROVE" or props.style_preset != "CUSTOM_IMAGE":
+    if props.mode == "RENDER_FINISH" or props.style_preset != "CUSTOM_IMAGE":
         return ""
     image = props.style_reference_image
     if not image:

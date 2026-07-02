@@ -17,8 +17,8 @@ def build_manifest(scene, props, job_dir: str, prompt_pack: dict, passes: dict) 
         "job_id": os.path.basename(job_dir),
         "source": props.source.lower(),
         "mode": props.mode.lower(),
-        "style_preset": props.style_preset.lower() if props.mode != "IMPROVE" else "none",
-        "has_style_reference": props.mode != "IMPROVE"
+        "style_preset": props.style_preset.lower() if props.mode != "RENDER_FINISH" else "none",
+        "has_style_reference": props.mode != "RENDER_FINISH"
         and props.style_preset == "CUSTOM_IMAGE"
         and bool(props.style_reference_image),
         "user_prompt": props.user_prompt,
