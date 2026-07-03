@@ -1,7 +1,7 @@
 bl_info = {
     "name": "The Cube Engine",
     "author": "Unkredible Studios",
-    "version": (0, 1, 36),
+    "version": (0, 1, 37),
     "blender": (4, 0, 0),
     "location": "View3D > Sidebar > The Cube",
     "description": "AI render post-production for Blender",

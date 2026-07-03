@@ -25,7 +25,9 @@ class AIRENDERFINISHER_OT_Generate(bpy.types.Operator):
         props.is_running = True
         reset_debug(props)
         set_job_state(props, "STARTING", "Starting", "Generate pressed", 0.02)
-        self._steps = JobManager(context).run_steps()
+        self._finished = False
+        self._job_manager = JobManager(context)
+        self._steps = self._job_manager.run_steps()
         self._timer = context.window_manager.event_timer_add(0.15, window=context.window)
         context.window_manager.modal_handler_add(self)
         return {"RUNNING_MODAL"}
@@ -37,13 +39,18 @@ class AIRENDERFINISHER_OT_Generate(bpy.types.Operator):
         if event.type != "TIMER":
             return {"PASS_THROUGH"}
 
+        if getattr(self, "_finished", False):
+            return {"FINISHED"}
+
         props = context.scene.ai_render_finisher
         try:
             next(self._steps)
             self._redraw(context)
             return {"RUNNING_MODAL"}
         except StopIteration as stop:
-            return self._finish(context, stop.value)
+            self._finished = True
+            result = stop.value or getattr(getattr(self, "_job_manager", None), "result", None)
+            return self._finish(context, result)
         except Exception as exc:
             set_job_state(props, "ERROR", "Error", str(exc), 1.0)
             self.report({"ERROR"}, f"The Cube Engine failed: {exc}")
@@ -52,6 +59,13 @@ class AIRENDERFINISHER_OT_Generate(bpy.types.Operator):
 
     def _finish(self, context, result):
         props = context.scene.ai_render_finisher
+        if result is None:
+            append_debug(props, "Job completed but result metadata was not returned by Blender modal")
+            set_job_state(props, "DONE", "Done", "The Cube Engine job completed", 1.0)
+            self.report({"INFO"}, "The Cube Engine job completed")
+            self._cleanup(context)
+            return {"FINISHED"}
+
         props.last_job_dir = result.job_dir
         props.last_output_path = result.outputs[0] if result.outputs else ""
         append_debug(props, f"Output files: {len(result.outputs)}")

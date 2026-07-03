@@ -1,6 +1,6 @@
 # The Cube Engine
 
-Version: 0.1.36
+Version: 0.1.37
 
 Blender addon for AI-guided render post-production.
 

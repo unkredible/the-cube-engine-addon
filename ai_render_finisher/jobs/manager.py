@@ -17,6 +17,7 @@ class JobManager:
         self.context = context
         self.scene = context.scene
         self.props = context.scene.ai_render_finisher
+        self.result = None
 
     def run(self) -> JobResult:
         steps = self.run_steps()
@@ -77,7 +78,8 @@ class JobManager:
             yield
             show_image_as_render(outputs[0], self.context)
 
-        return JobResult(job_dir=job_dir, manifest_path=manifest_path, outputs=outputs)
+        self.result = JobResult(job_dir=job_dir, manifest_path=manifest_path, outputs=outputs)
+        return self.result
 
     def _provider(self):
         addon = self.context.preferences.addons.get("ai_render_finisher")
