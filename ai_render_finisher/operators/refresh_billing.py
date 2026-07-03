@@ -31,9 +31,12 @@ class AIRENDERFINISHER_OT_RefreshBilling(bpy.types.Operator):
 
 def apply_billing_status(props, billing: dict) -> None:
     currency = billing.get("currency") or "USD"
+    unlimited = bool(billing.get("unlimited_credits"))
+    balance = _money(billing.get("current_balance"), currency)
+    after = _money(billing.get("remaining_after_estimate"), currency)
     props.estimated_cost = _money(billing.get("estimated_cost"), currency)
-    props.credit_balance = _money(billing.get("current_balance"), currency)
-    props.credit_after_estimate = _money(billing.get("remaining_after_estimate"), currency)
+    props.credit_balance = f"Admin ({balance})" if unlimited else balance
+    props.credit_after_estimate = f"Admin ({after})" if unlimited else after
     if billing.get("error"):
         append_debug(props, f"Billing error: {billing['error']}")
 
